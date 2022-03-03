@@ -174,12 +174,61 @@
             width: 100%;
             transform: translateX(0);
         }
-
-
     </style>
 
-    <script>
-        // 코드 작성
+       <script>
+        $(document).ready(function () {
+            listcmt()
+        });
+
+        function postcmt() {
+            let name = $('#user_name').val()
+            let comment = $('#comment').val()
+            let star = $('#star').val()
+
+            $.ajax({
+                type: 'POST',
+                url: '/hiking',
+                data: {name_give: name, comment_give: comment, star_give: star},
+                success: function (response) {
+                    alert(response['msg'])
+                    window.location.reload()
+                }
+            })
+        }
+
+        function listcmt() {
+            $.ajax({
+                type: "GET",
+                url: "/hiking",
+                data: {},
+                success: function (response) {
+                    let rows = response['comment']
+                    for (let i = 0; i < rows.length; i++) {
+                        let name = rows[i]['name']
+                        let comment = rows[i]['comment']
+                        let star = rows[i]['star']
+
+                        let star_image = '⭐'.repeat(star)
+
+                        let temp_html = `<div class="card-box">
+                                            <div class="card-header">
+                                                ${star_image}
+                                            </div>
+                                            <div class="card-body">
+                                                <blockquote class="blockquote mb-0">
+                                                    <h5>${comment}</h5>
+                                                    <br>
+                                                    <footer class="blockquote-footer">${name}</footer>
+                                                </blockquote>
+                                            </div>
+                                        </div>
+                        `
+                        $('#comment-box').append(temp_html)
+                    }
+                }
+            });
+        }
     </script>
 
 </head>
@@ -191,7 +240,7 @@
             <label for="user_name"><span>이 름</span></label>
         </p>
     </form>
-    <select>
+    <select id="star">
         <option selected>--별점--</option>
         <option value="1">⭐</option>
         <option value="2">⭐⭐</option>
@@ -199,45 +248,11 @@
         <option value="4">⭐⭐⭐⭐</option>
         <option value="5">⭐⭐⭐⭐⭐</option>
     </select>
-    <textarea id="comment-box" placeholder="리뷰 남기기"></textarea>
-    <button onclick="hiking" class="mybtn-outline mybtn-green-outline" type="button">댓 글 등 록</button>
+    <textarea id="comment" placeholder="리뷰 남기기"></textarea>
+    <button onclick="postcmt()" class="mybtn-outline mybtn-green-outline" type="button">댓 글 등 록</button>
 </div>
 
-<div class="card-box">
-    <div class="card-header">
-        ⭐⭐⭐⭐
-    </div>
-    <div class="card-body">
-        <blockquote class="blockquote mb-0">
-            <h5>여기에 코멘트를 입력합니다.</h5>
-            <br>
-            <footer class="blockquote-footer">여기에 이름을 입력합니다.</footer>
-        </blockquote>
-    </div>
-</div>
-<div class="card-box">
-    <div class="card-header">
-        ⭐⭐⭐⭐
-    </div>
-    <div class="card-body">
-        <blockquote class="blockquote mb-0">
-            <h5>여기에 코멘트를 입력합니다.</h5>
-            <br>
-            <footer class="blockquote-footer">여기에 이름을 입력합니다.</footer>
-        </blockquote>
-    </div>
-</div>
-<div class="card-box">
-    <div class="card-header">
-        ⭐⭐⭐⭐
-    </div>
-    <div class="card-body">
-        <blockquote class="blockquote mb-0">
-            <h5>여기에 코멘트를 입력합니다.</h5>
-            <br>
-            <footer class="blockquote-footer">여기에 이름을 입력합니다.</footer>
-        </blockquote>
-    </div>
+<div id="comment-box">
 </div>
 
 </body>
