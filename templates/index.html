@@ -19,17 +19,158 @@
         * {
             font-family: 'Noto Sans KR', sans-serif;
         }
+        .selectbox{
+            border-radius: 1px;
+            float: left;
+            width :50%;
+            height: 20px;
 
-        // 코드 작성
+            text-align: center;
+
+            display : flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .searchbt{
+            color : blue;
+            border-radius: 10px;
+            float: right;
+            width :50%;
+            height: 20px;
+
+            text-align: center;
+
+            display : flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        /* // 코드 작성 */
     </style>
 
     <script>
         // 코드 작성
+        function handleOnChange() {
+            // 선택된 데이터 가져오기
+            const value = $('#region').val()
+            
+            // 데이터 출력
+            // document.getElementById('region').innerText = value;
+            $.ajax({
+                type: 'POST',
+                url: '/toy_project',
+                data: {region_givde: value},
+                success: function (response) {
+                    console.log(response['msg'])
+                    window.location.reload()
+                }
+            });
+
+            // console.log(value)
+        }
     </script>
 
 </head>
 <body>
     <h1>한국 명산 코스 정보 커뮤니티</h1>
+    <div class = "selectbox">
+        <select id="region">
+            <option value="korean">전체</option>
+            <option value="서울">서울</option>
+            <option value="경기도">경기도</option>
+            <option value="강원도">강원도</option>
+            <option value="충청남도">충청남도</option>
+            <option value="충청북도">충청북도</option>
+            <option value="전라남도">전라남도</option>
+            <option value="전라북도">전라북도</option>
+            <option value="경상남도">경상남도</option>
+            <option value="경상북도">경상북도</option>
+            <option value="제주도">제주도</option>
+
+        </select>  
+    </div>
+
+    <div class = "searchbt">
+        <button onclick = "handleOnChange()"> 검색</button>
+    </div>
+<div id='result'></div>
+<div class="mycards">
+    <div class="row row-cols-1 row-cols-md-5 g-4" id="cards-box">
+        <div class="col">
+            <div class="card h-100">
+                    <img src="https://i.imgur.com/wVQ10Wi.jpg" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="mtname">가리산 산이름/mntiname</h5>
+                        <p class="mtsubinfo">소양호에서 폭포 따라 정상까지 산정보부제/subnm</p>
+                        <p class="mtaddress">강원도 춘천시 북사면 물로리 주소/mntiadd</p>
+                    </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                    <img src="https://i.imgur.com/wVQ10Wi.jpg" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="mtname">산이름/석준님key mntiname</h5>
+                        <p class="mtsubinfo">산정보부제/미란님key subnm</p>
+                        <p class="mtaddress">주소/석준님key mntiadd</p>
+                    </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                    <img src="https://i.imgur.com/wVQ10Wi.jpg" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="mtname">가리산 산이름/mntiname</h5>
+                        <p class="mtsubinfo">소양호에서 폭포 따라 정상까지 산정보부제/subnm</p>
+                        <p class="mtaddress">강원도 춘천시 북사면 물로리 주소/mntiadd</p>
+                    </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                    <img src="https://i.imgur.com/wVQ10Wi.jpg" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="mtname">가리산 산이름/mntiname</h5>
+                        <p class="mtsubinfo">소양호에서 폭포 따라 정상까지 산정보부제/subnm</p>
+                        <p class="mtaddress">강원도 춘천시 북사면 물로리 주소/mntiadd</p>
+                    </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                    <img src="https://i.imgur.com/wVQ10Wi.jpg" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="mtname">가리산 산이름/mntiname</h5>
+                        <p class="mtsubinfo">소양호에서 폭포 따라 정상까지 산정보부제/subnm</p>
+                        <p class="mtaddress">강원도 춘천시 북사면 물로리 주소/mntiadd</p>
+                    </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                    <img src="https://i.imgur.com/wVQ10Wi.jpg" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="mtname">가리산 산이름/mntiname</h5>
+                        <p class="mtsubinfo">소양호에서 폭포 따라 정상까지 산정보부제/subnm</p>
+                        <p class="mtaddress">강원도 춘천시 북사면 물로리 주소/mntiadd</p>
+                    </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                    <img src="https://i.imgur.com/wVQ10Wi.jpg" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="mtname">가리산 산이름/mntiname</h5>
+                        <p class="mtsubinfo">소양호에서 폭포 따라 정상까지 산정보부제/subnm</p>
+                        <p class="mtaddress">강원도 춘천시 북사면 물로리 주소/mntiadd</p>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
     <p>class, id 값은 만들면서 슬랙 공유 > 통일해서 진행</p>
     <p>api 인증키</p>
     9RucDw1Xmk16mCnCOBY3aAfQPMCnyS3sTP3v2tthlVw0CS9TZ6j64bTzDG1UEW9u%2BiY6X05TKK6OaYDR4HySog%3D%3D

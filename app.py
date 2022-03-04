@@ -9,16 +9,22 @@ db = client.dbsparta
 def home():
     return render_template('index.html')
 
-@app.route("/hiking", methods=["POST"])
-def hiking_post():
-    star_receive = request.form["star_give"]
-    comment_receive = request.form["comment_give"]
-    return jsonify({'msg':'등록 완료'})
+# @app.route("/hiking", methods=["POST"])
+# def hiking_post():
+#     star_receive = request.form["star_give"]
+#     comment_receive = request.form["comment_give"]
+#     return jsonify({'msg':'등록 완료'})
 
 @app.route("/hiking", methods=["GET"])
 def hiking_get():
     review_list = list(db.hiking.find({}, {'_id': False}))
     return jsonify({'reviews':review_list})
 
+@app.route("/hiking", methods=["POST"])
+def bring_region_data():
+    region_receive = request.form["region"]
+    search_list = list(db.hiking.find({"mnt_address".split(' ')[0]:region_receive}, {'_id': False}))
+    return jsonify({'mt_in_region':search_list})
+    
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
