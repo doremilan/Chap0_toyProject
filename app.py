@@ -13,11 +13,6 @@ def home():
 def index_sub():
     return render_template('index_sub.html')
 
-@app.route("/mnt_info", methods=["POST"])
-def movie_post():
-    sample_receive = request.form['sample_give']
-    print(sample_receive)
-    return jsonify({'msg':'POST 연결 완료!'})
 
 #  지역별 필터 기능
 @app.route("/mnt_select", methods=["POST"])
