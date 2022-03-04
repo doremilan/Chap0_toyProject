@@ -15,11 +15,15 @@ def index_sub():
 
 
 #  지역별 필터 기능
-@app.route("/mnt_select", methods=["POST"])
+@app.route("/mnt_select", methods=["GET"])
 def mnt_select():
-    area_receive = request.form["area_give"]
-    search_list = list(db.mnt_info.find({"mnt_area": area_receive}, {'_id': False}))
-    return jsonify({'area_list':search_list})
+    doc = []  # 검색을 마친 자료가 들어갈 배열입니다.
+    area_receive = request.args.get("area_give")
+    mountains = list(db.mnt_info.find({}, {'_id': False}))  # 산의 전체 목록을 mountains 변수로 받아옵니다.
+    for mountain in mountains:
+        if area_receive in mountain['mnt_address']:  # 산의 세부 설명에서 mnt_receive로 받은 검색어를 찾아봅니다.
+            doc.append(mountain)  # 일치하는 명산의 번호를 doc 배열에 집어넣습니다.
+    return jsonify({'search_list': doc, 'msg': '검색완료!'})
 
 @app.route("/mnt_info", methods=["GET"])
 def mnt_get():
