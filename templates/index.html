@@ -38,17 +38,19 @@
             justify-content: center;
         }
 
-        .input-group{
+        .input-group {
             width: 800px;
             height: 50px;
         }
 
-        .mtname{
+        .mtname {
             font-weight: bold;
         }
+
         .mtsubinfo {
 
         }
+
         .mtaddress {
             color: gray;
         }
@@ -57,13 +59,13 @@
             margin: 30px auto 30px auto;
             width: 95%;
         }
-                /*footer*/
+
+        /*footer*/
         footer {
             height: 150px;
             position: relative;
             padding: 10px 0px 0px 50px;
-            /* transform : translateY(-100%); */ /*구글에서 footer bottom으로 박을 때 이걸 쓰랬는데 안쓰니까 bottom에 박히는데? 일단 주석처리 ㄱ*/
-            border: 1px solid lightgrey;
+
         }
 
         .footer-title {
@@ -76,112 +78,122 @@
         }
 
     </style>
+
+    <script>
+        $(document).ready(function () {
+            listing();
+        });
+
+        function listing() {
+            $.ajax({
+                type: 'GET',
+                url: '/mnt_info',
+                data: {},
+                success: function (response) {
+                    let rows = response['mnt']
+                    for (let i = 0; i < rows.length; i++) {
+                        let mnt_name = rows[i]['mnt_name']
+                        let mnt_address = rows[i]['mnt_address']
+                        let mnt_img = rows[i]['mnt_img']
+
+                        let temp_html = `<div class="col">
+                                                <div class="card h-100">
+                                                    <a href="/index_sub" target="_blank"><img id= "img-mtn" src="${mnt_img}"
+                                                                                              class="card-img-top"></a>
+                                                    <div class="card-body">
+                                                        <h5 class="mtname">${mnt_name}</h5>
+                                                        <p class="mtaddress">${mnt_address}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>`
+
+                        $("#img-mtn").attr("src", mnt_img)
+                        $('#cards-box').append(temp_html)
+                    }
+                }
+            })
+        }
+
+        // 코드 작성
+        function handleOnChange() {
+            // 선택된 데이터 가져오기
+            const value = $('#area').val()
+
+            // 데이터 출력
+            // document.getElementById('region').innerText = value;
+            $.ajax({
+                type: 'POST',
+                url: '/mnt_select',
+                data: {area_give: value},
+                success: function (response) {
+                    console.log(response['msg'])
+                    window.location.reload()
+                }
+            });
+
+            console.log(value)
+        }
+    </script>
+
 </head>
 
 <body>
 <div class="mytitle">
     <h1>한국 명산 코스 정보 커뮤니티</h1>
     <p>
-    <div class="input-group">
-        <select class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
-            <option selected>지역 선택</option>
-            <option value="1">전체</option>
-            <option value="2">서울특별시</option>
-            <option value="3">부산광역시</option>
-            <option value="3">mntiarea = mntiadd.split()</option>
+    <div class="selectbox">
+        <select class="form-select" id="area" aria-label="Example select with button addon">
+            <option selected>-- 지역 선택 (전체) --</option>
+            <option value="서울">서울특별시</option>
+            <option value="부산">부산광역시</option>
+            <option value="대구">대구광역시</option>
+            <option value="인천">인천광역시</option>
+            <option value="광주">광주광역시</option>
+            <option value="대전">대전광역시</option>
+            <option value="울산">울산광역시</option>
+            <option value="경기도">경기도</option>
+            <option value="강원도">강원도</option>
+            <option value="충청북도">충청북도</option>
+            <option value="충청남도">충청남도</option>
+            <option value="전라북도">전라북도</option>
+            <option value="전라남도">전라남도</option>
+            <option value="경상북도">경상북도</option>
+            <option value="경상남도">경상남도</option>
+            <option value="제주도">제주특별자치도</option>
         </select>
-            <button type="button" class="btn btn-success">찾아보기</button>
+        <button type="button" onclick="handleOnChange()" class="btn btn-success">찾아보기</button>
     </div>
     </p>
 </div>
-
 <div class="mycards">
     <div class="row row-cols-1 row-cols-md-5 g-4" id="cards-box">
         <div class="col">
             <div class="card h-100">
-                    <img src="https://i.imgur.com/wVQ10Wi.jpg" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="mtname">가리산 산이름/mntiname</h5>
-                        <p class="mtsubinfo">소양호에서 폭포 따라 정상까지 산정보부제/subnm</p>
-                        <p class="mtaddress">강원도 춘천시 북사면 물로리 주소/mntiadd</p>
-                    </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100">
-                    <img src="https://i.imgur.com/wVQ10Wi.jpg" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="mtname">산이름/석준님key mntiname</h5>
-                        <p class="mtsubinfo">산정보부제/미란님key subnm</p>
-                        <p class="mtaddress">주소/석준님key mntiadd</p>
-                    </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100">
-                    <img src="https://i.imgur.com/wVQ10Wi.jpg" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="mtname">가리산 산이름/mntiname</h5>
-                        <p class="mtsubinfo">소양호에서 폭포 따라 정상까지 산정보부제/subnm</p>
-                        <p class="mtaddress">강원도 춘천시 북사면 물로리 주소/mntiadd</p>
-                    </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100">
-                    <img src="https://i.imgur.com/wVQ10Wi.jpg" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="mtname">가리산 산이름/mntiname</h5>
-                        <p class="mtsubinfo">소양호에서 폭포 따라 정상까지 산정보부제/subnm</p>
-                        <p class="mtaddress">강원도 춘천시 북사면 물로리 주소/mntiadd</p>
-                    </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100">
-                    <img src="https://i.imgur.com/wVQ10Wi.jpg" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="mtname">가리산 산이름/mntiname</h5>
-                        <p class="mtsubinfo">소양호에서 폭포 따라 정상까지 산정보부제/subnm</p>
-                        <p class="mtaddress">강원도 춘천시 북사면 물로리 주소/mntiadd</p>
-                    </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100">
-                    <img src="https://i.imgur.com/wVQ10Wi.jpg" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="mtname">가리산 산이름/mntiname</h5>
-                        <p class="mtsubinfo">소양호에서 폭포 따라 정상까지 산정보부제/subnm</p>
-                        <p class="mtaddress">강원도 춘천시 북사면 물로리 주소/mntiadd</p>
-                    </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100">
-                    <img src="https://i.imgur.com/wVQ10Wi.jpg" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="mtname">가리산 산이름/mntiname</h5>
-                        <p class="mtsubinfo">소양호에서 폭포 따라 정상까지 산정보부제/subnm</p>
-                        <p class="mtaddress">강원도 춘천시 북사면 물로리 주소/mntiadd</p>
-                    </div>
+                <a href="/index_sub" target="_blank"><img src="${mnt_img}"
+                                                          class="card-img-top"></a>
+                <div class="card-body">
+                    <h5 class="mtname">${mnt_name}</h5>
+                    <p class="mtaddress">${mnt_address}</p>
+                </div>
             </div>
         </div>
     </div>
 </div>
-</div>
 
-    <!--footer-->
-    <footer class="footer">
-        <div>
-            <div class="footer-title">
-                한국 명산 코스 정보 커뮤니티
-            </div>
-            <div class="footer-detail">
-                Designed by 항해99 사전스터디 24조
-            </div>
+
+<!--footer-->
+<footer class="footer">
+    <div>
+        <div class="footer-title">
+            한국 명산 코스 정보 커뮤니티
         </div>
-    </footer>
+        <div class="footer-detail">
+            Designed by 항해99 사전스터디 24조
+        </div>
+    </div>
+</footer>
 </body>
 </html>
 
