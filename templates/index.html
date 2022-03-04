@@ -38,11 +38,6 @@
             justify-content: center;
         }
 
-        .selectbox {
-            width: 800px;
-            height: 50px;
-        }
-
         .mtname {
             font-weight: bold;
         }
@@ -95,7 +90,7 @@
 
                         let temp_html = `<div class="col">
                                                 <div class="card h-100">
-                                                    <a href="/index_sub" target="_blank"><img id= "img-mtn" src="${mnt_img}"
+                                                    <a href="/index_sub" target="_blank"><img id= "img-mtn" src="${mnt_img}" style="width: auto;height: 230px; display: block; margin: 0px auto;"
                                                                                               class="card-img-top"></a>
                                                     <div class="card-body">
                                                         <h5 class="mtname">${mnt_name}</h5>
@@ -116,21 +111,42 @@
         // 코드 작성
         function handleOnChange() {
             // 선택된 데이터 가져오기
-            const value = $('#area').val()
+            $('#cards-box').empty()
+            let value = $('#area').val()
 
             // 데이터 출력
             // document.getElementById('region').innerText = value;
             $.ajax({
-                type: 'POST',
-                url: '/mnt_select',
-                data: {area_give: value},
+                type: 'GET',
+                url: '/mnt_select?area_give='+value,
+                data: {},
                 success: function (response) {
-                    console.log(response['msg'])
-                    window.location.reload()
-                }
-            });
+                    let rows = response['search_list']
+                    console.log(rows)
+                    for (let i = 0; i < rows.length; i++) {
+                        let mnt_name = rows[i]['mnt_name']
+                        let mnt_address = rows[i]['mnt_address']
+                        let mnt_img = rows[i]['mnt_img']
 
-            console.log(value)
+                        let temp_html = `<div class="col">
+                                                <div class="card h-100">
+                                                    <a href="/index_sub" target="_blank"><img id= "img-mtn" src="${mnt_img}" style="width: auto;height: 220px; display: block; margin: 0px auto;"
+                                                                                              class="card-img-top"></a>
+                                                    <div class="card-body">
+                                                        <h5 class="mtname">${mnt_name}</h5>
+                                                        <p class="mtaddress">${mnt_address}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>`
+
+                        $("#img-mtn").attr("src", mnt_img)
+                        $('#cards-box').append(temp_html)
+
+                    }
+                }
+            })
         }
     </script>
 
@@ -139,30 +155,33 @@
 <body>
 <div class="mytitle">
     <h1>한국 명산 코스 정보 커뮤니티</h1>
-    <p>
+    <br>
     <div class="selectbox">
-        <select class="form-select" id="area" aria-label="Example select with button addon">
-            <option selected>-- 지역 선택 (전체) --</option>
-            <option value="서울">서울특별시</option>
-            <option value="부산">부산광역시</option>
-            <option value="대구">대구광역시</option>
-            <option value="인천">인천광역시</option>
-            <option value="광주">광주광역시</option>
-            <option value="대전">대전광역시</option>
-            <option value="울산">울산광역시</option>
-            <option value="경기도">경기도</option>
-            <option value="강원도">강원도</option>
-            <option value="충청북도">충청북도</option>
-            <option value="충청남도">충청남도</option>
-            <option value="전라북도">전라북도</option>
-            <option value="전라남도">전라남도</option>
-            <option value="경상북도">경상북도</option>
-            <option value="경상남도">경상남도</option>
-            <option value="제주도">제주특별자치도</option>
-        </select>
+        <div style="float: left">
+            <select class="form-select" id="area" aria-label="Example select with button addon">
+                <option selected>-- 지역 선택 (전체) --</option>
+                <option value="서울">서울특별시</option>
+                <option value="부산">부산광역시</option>
+                <option value="대구">대구광역시</option>
+                <option value="인천">인천광역시</option>
+                <option value="광주">광주광역시</option>
+                <option value="대전">대전광역시</option>
+                <option value="울산">울산광역시</option>
+                <option value="경기도">경기도</option>
+                <option value="강원도">강원도</option>
+                <option value="충청북도">충청북도</option>
+                <option value="충청남도">충청남도</option>
+                <option value="전라북도">전라북도</option>
+                <option value="전라남도">전라남도</option>
+                <option value="경상북도">경상북도</option>
+                <option value="경상남도">경상남도</option>
+                <option value="제주도">제주특별자치도</option>
+            </select>
+        </div>
+        <div style="display: inline-block; margin-left: 10px">
             <button type="button" onclick="handleOnChange()" class="btn btn-success">찾아보기</button>
+        </div>
     </div>
-    </p>
 </div>
 <div class="mycards">
     <div class="row row-cols-1 row-cols-md-5 g-4" id="cards-box">
