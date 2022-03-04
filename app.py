@@ -20,6 +20,7 @@ def hiking_get():
     review_list = list(db.hiking.find({}, {'_id': False}))
     return jsonify({'reviews':review_list})
 
+#  지역별 필터 기능
 @app.route("/hiking", methods=["POST"])
 def bring_region_data():
     region_receive = request.form["region"]

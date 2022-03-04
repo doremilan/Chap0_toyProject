@@ -19,10 +19,14 @@
         * {
             font-family: 'Noto Sans KR', sans-serif;
         }
+
         .selectbox{
             border-radius: 1px;
             float: left;
-            width :50%;
+            width : 50%;
+            margin: auto;
+            /* padding: .8em .5em; */
+
             height: 20px;
 
             text-align: center;
@@ -42,7 +46,7 @@
             text-align: center;
 
             display : flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
 
         }
@@ -75,6 +79,7 @@
 </head>
 <body>
     <h1>한국 명산 코스 정보 커뮤니티</h1>
+
     <div class = "selectbox">
         <select id="region">
             <option value="korean">전체</option>
@@ -95,6 +100,7 @@
     <div class = "searchbt">
         <button onclick = "handleOnChange()"> 검색</button>
     </div>
+   
 <div id='result'></div>
 <div class="mycards">
     <div class="row row-cols-1 row-cols-md-5 g-4" id="cards-box">
