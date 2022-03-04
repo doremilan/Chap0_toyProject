@@ -11,7 +11,10 @@
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <!--장소 검색 과 주소-좌표 변환 을 할 수 있는 services 라이브러리 입니다.-->
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=APIKEY&libraries=services"></script>
     <link rel="stylesheet" href="static/style.css">
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=eed026bf33e1b12d9d81574b676ac6d3"></script>
     <title>6기 24조 toy-project(subpage)</title>
     <style>
         * {
@@ -122,8 +125,8 @@
         $(document).ready(function () {
             listcmt();
             mnt_info();
-        });
 
+        });
         function mnt_info(){
             $('#detail').empty();
                 $.ajax({
@@ -149,6 +152,22 @@
                         $("#img-mtn").attr("src", mnt_img)
                         ${'.mytitle'}.append(temp_head_html)
                         $('#detail').append(temp_html)
+
+                        function drawmap() {
+                            var geocoder = new kakao.maps.services.Geocoder();
+
+                            var callback = function (result, status) {
+                                if (status === kakao.maps.services.Status.OK) {
+                                    geocoder.addressSearch(mnt_address, callback);
+
+                                    var container = document.getElementById('map');
+                                    var options = { //지도를 생성할 때 필요한 기본 옵션
+                                        center: new kakao.maps.LatLng(result), //지도의 중심좌표.
+                                        level: 3 //지도의 레벨(확대, 축소 정도)
+                                    };
+                                }
+                            };
+                        }
 
                     }
                 }
@@ -186,13 +205,14 @@
             $.ajax({
                 type: 'POST',
                 url: '/mountain/comment',
-                data: {username_give:user_name, star_give:star, comment_give:comment},
+                data: {username_give: user_name, star_give: star, comment_give: comment},
                 success: function (response) {
                     alert(response['msg'])
                     window.location.reload()
                 }
             });
         }
+
     </script>
 </head>
 <body>
@@ -214,8 +234,8 @@
                 <p>강원도 춘천시와 홍천군의 경계를 이루는 산으로, 산 정상에 서면 탁 트인 시야와 발 아래로 펼쳐진 소양호의 풍경이 등산객들의 발걸음을 멈추게 하는 곳이다. 산자락을 감싸 흐르는 조그마한 폭포의 물소리가 사람들의 마음을 시원하게 해주는 가리산은 우거진 숲과 노송들이 어루러져 비경을 이루고 있다. 소양호 쪽으로 하산하여 물노리 선착장에서 유람선을 타고 소양댐 선착장까지 나올 수 있어, 산행도 하고 배를 타는 재미가 있다.<br>산이름인 가리는 '단으로 묶은 곡식이나 땔나무 따위를 차곡차곡 쌓아둔 큰 더미'를 뜻하는 순우리말로서, 산봉우리가 노적가리처럼 고깔 모양으로 생긴 데서 유래한다. 태백산맥 중 내지(內地) 산맥의 일부를 이룬다. 제1봉 남쪽에서 홍천강이 발원하여 북한강의 지류인 소양강의 수원(水源)을 이룬다.능선은 완만한 편이나, 정상 일대는 좁은 협곡을 사이에 둔 3개의 암봉으로 이루어져 있으며 강원 제1의 전망대라고 할 만큼 조망이 뛰어나, 소양호를 비롯하여 북쪽으로 향로봉에서 설악산을 거쳐 오대산으로 힘차게 뻗어나간 백두대간 등 강원 내륙의 고산준령이 한눈에 보인다. 정상 부근에서는 소양호로 갈 수 있는 가삽고개가 있는데, 그 형태가 계단식 분지형으로 이루어져 있다.<br><br>북쪽 산록은 소양호에 미치고 동쪽 산록에 홍천광산이 있다. 산기슭에는 숲이 우거져 있고 갖가지 기암괴석이 즐비하며, 산 정상과 계곡에는 향토 수종인 참나무가 주종을 이루며 자라고 있다. 아래쪽에는 두릅나무·철쭉·싸리나무·산초나무 등 관목류와 약용으로 사용되는 피나물·애기똥풀·양지꽃 등 야생화가 서식하고 있다. 강원도에서 진달래가 가장 많이 피는 산으로도 유명하다. 1998년 가리산 자연휴영림으로 개장되어 통나무집·야영장·체육시설 등 편의시설이 있다. 휴양림 입구에는 높이 8m의 용소폭포가 있고, 주변에 스키장·온천·수타사·팔봉산 등의 관광지가 있다.</p>
             </div>
             <!--지도-->
-            <div class="map">
-                지도 들어갈 부분
+            <div id="map" style="width: 500px; height: 400px;">
+
             </div>
         </div>
         <!--comment-->
