@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cc63cbb83555d894219f7525f0a6a06d&libraries=services"></script> <!--각자의 카카오맵 자바스크립트 앱키를 넣어주셔야 합니다.-->
+
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/style.css">
+    <title>6기 24조 toy-project(subpage)</title>
+    <script>
+        $(document).ready(function () {
+            init_page() // 받은 산의 정보를 바탕으로 페이지의 정보를 초기화합니다.
+            show_comment() // 해당 산에 대한 코멘트를 불러옵니다.
+		})
+        function init_page() {
+            $.ajax({
+                type: "GET",
+                url: "/mnt_show?num_give="+'{{mnt_no}}', // app.py에서 mnt_no로 받은 정보를 활용해 검색 후 데이터를 받아옵니다. flask를 통해 받은 데이터는 {{데이터}} 로 활용이 가능해요.
+                data: {},
+                success: function(response){
+                    let mnt_data = response['mnt_data'] // 아래의 메소드들은 내장 메소드로, id 태그의 내용을 받아온 데이터로 변환시키는 작업을 합니다.
+
+                    document.getElementById("mnt_name").innerHTML=mnt_data['mnt_name']
+                    document.getElementById("mnt_address").innerHTML=mnt_data['mnt_address']
+                    document.getElementById("mnt_top").innerHTML=mnt_data['mnt_top']
+                    document.getElementById("mnt_desc").innerHTML=mnt_data['mnt_desc']
+
+                    let temp_html=`<img src=${mnt_data['mnt_img']} alt=${mnt_data['mnt_name']}>`
+                    $('#mnt_img').append(temp_html)
+                }
+            })
+        }
+
+        function save_comment(){
+            let num = '{{mnt_no}}'
+            let name = $('#user-name').val()
+            let comment = $('#mytext').val()
+            let score = $('#inputGroupSelect01').val()
+
+            $.ajax({
+                type: "POST",
+                url: "/save_comment",
+                data: {'num':num, 'name':name, 'comment':comment, 'score':score},
+                success: function(response){
+                    console.log(response)
+                    if (Object.keys(response).includes('success')){
+                        alert(response['success'])
+                    $('#comment').empty()
+                    show_comment()
+                    }else {
+                        alert(response['denied'])
+                    }
+                }
+            })
+        }
+
+        function show_comment(){
+            $.ajax({
+                type: "GET",
+                url: "/show_comment?num_give="+'{{mnt_no}}', // app.py에서 mnt_no로 받은 정보를 활용해 검색 후 데이터를 받아옵니다. flask를 통해 받은 데이터는 {{데이터}} 로 활용이 가능해요.
+                data: {},
+                success: function(response){
+                    if (Object.keys(response).includes('msg')){
+                        let msg = response['msg']
+                        let temp_html=`<p>${msg}</p><hr>`
+                        $('#comment').append(temp_html)
+                    }else{
+                        let mnt_data = response['mnt_data']
+
+                        for (i = 0 ; i < mnt_data.length ; i++){
+                            let name = mnt_data[i]['name']
+                            let comment = mnt_data[i]['comment']
+                            let score = mnt_data[i]['score']
+
+                            let star_image = '⭐'.repeat(score)
+                            let temp_html=`<div class="star">${star_image}</div>
+                                         <p class="comment">${comment}</p>
+                                       <div class="username">${name}</div><hr>`
+                            $('#comment').append(temp_html)
+                        }
+                    }
+                }
+            })
+        }
+    </script>
+
+</head>
+<body>
+    <!--title-->
+    <div class="mytitle">
+        <h1 id="mnt_name"></h1>
+    </div>
+    <!--real body, wrapper-->
+    <div id="wrapper">
+        <div class="content">
+            <div id="mnt_img" class="image-mt">
+            </div>
+            <div class="detail">
+                <p id="mnt_address" class="address"></p>
+                <p id="mnt_top" class="aeatreason"></p>
+                <hr>
+                <p id="mnt_desc"></p>
+            </div>
+            <!--지도-->
+            <div id="map" class="map"></div>
+        </div>
+        <!--comment-->
+        <!--mycomment-->
+        <div class="mycomment">
+            <div><h5>Comment</h5></div>
+            <div class="myusername">
+                <label for="user-name">닉네임</label> 
+                <input name="input_value" type="text" class="user-name" id="user-name" placeholder="닉네임">
+            </div>
+            <div class="mytextarea-comment">
+                <textarea name="input_value" id="mytext" cols="48" rows="3" placeholder="댓글을 작성해주세요"></textarea>
+            </div>
+            <div class="mystar">
+                <select class="star-select" id="inputGroupSelect01">
+                    <option selected>별점</option>
+                      <option value="5">⭐⭐⭐⭐⭐</option>
+                      <option value="4">⭐⭐⭐⭐</option>
+                      <option value="3">⭐⭐⭐</option>
+                      <option value="2">⭐⭐</option>
+                      <option value="1">⭐</option>
+                </select>
+            </div>
+            <div class="submit">
+                <button id="btn-write" type="button" class="btn btn-success" onclick="save_comment()">작성</button>
+            </div>
+            <hr style="margin-top: 70px;">
+        </div>
+        <!--comments보여주는곳-->
+        <div class="allcomments">
+            <div id="comment">
+            </div>
+        </div>
+    </div>
+
+    <!--footer-->
+    <footer class="footer">
+        <div>
+            <div class="footer-title">
+                한국 명산 코스 정보 커뮤니티
+            </div>
+            <div class="footer-detail">
+                Designed by 항해99 사전스터디 24조
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        var mnt_data //mnt_data에 대한 전역변수를 선언해 줍니다.
+        // 이 아래부터는 카카오 API 예제를 긁어온 것입니다. 헤드가 아닌 바디에 붙여서 작동시키는데, html 페이지 렌더링 속도를 빠르게 하기 위해서라고 합니다.
+		// 저는 아직 코드에 대해 완벽히 이해하지는 못했습니다. 카카오맵 API의 키워드로 장소 검색하기를 보고 참조하시길 부탁드립니다.
+        // ajax를 한번 더 호출합니다. ajax코드가 반복되므로 사실 좋은 방법은 아닙니다. 더 좋은 방법이 있으시다면 제보 부탁드립니다.
+        $.ajax({
+                type: "GET",
+                url: "/mnt_show?num_give="+'{{mnt_no}}', // app.py에서 mnt_no로 받은 정보를 활용해 검색 후 데이터를 받아옵니다. flask를 통해 받은 데이터는 {{데이터}} 로 활용이 가능해요.
+                async: false, // ajax에 들어간 데이터를 밖으로 빼주는 역할을 합니다.
+                data: {},
+                success: function(response){
+                    mnt_data = response['mnt_data']
+                }
+            })
+
+        let address = mnt_data['mnt_address'] + ' ' + mnt_data['mnt_name']
+
+		let searchWord = address
+
+		var infowindow = new kakao.maps.InfoWindow({zIndex:0})
+
+		var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+				mapOption = {
+					center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
+					level: 3 // 지도의 확대 레벨
+				}
+
+		// 지도를 생성합니다
+		var map = new kakao.maps.Map(mapContainer, mapOption)
+
+		// 장소 검색 객체를 생성합니다
+		var ps = new kakao.maps.services.Places()
+
+		// 키워드로 장소를 검색합니다
+		ps.keywordSearch(searchWord, placesSearchCB) // 이곳이 포인트. 주소지와 산의 이름을 합쳐 검색어를 만들어 냅니다.
+
+		// 키워드 검색 완료 시 호출되는 콜백함수 입니다
+		function placesSearchCB (data, status, pagination) {
+			if (status === kakao.maps.services.Status.OK) {
+
+				// 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+				// LatLngBounds 객체에 좌표를 추가합니다
+				var bounds = new kakao.maps.LatLngBounds();
+
+				for (var i=0; i<data.length; i++) {
+					displayMarker(data[i]);
+					bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+				}
+
+				// 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+				map.setBounds(bounds);
+			}
+		}
+
+		// 지도에 마커를 표시하는 함수입니다
+		function displayMarker(place) {
+
+			// 마커를 생성하고 지도에 표시합니다
+			var marker = new kakao.maps.Marker({
+				map: map,
+				position: new kakao.maps.LatLng(place.y, place.x)
+			});
+
+			// 마커에 클릭이벤트를 등록합니다
+			kakao.maps.event.addListener(marker, 'click', function() {
+				// 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
+				infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>')
+				infowindow.open(map, marker)
+			})
+		}
+	</script>
+</body>
+</html>
