@@ -121,7 +121,6 @@
             position: relative;
             padding: 10px 0px 0px 50px;
             /* transform : translateY(-100%); */ /*구글에서 footer bottom으로 박을 때 이걸 쓰랬는데 안쓰니까 bottom에 박히는데? 일단 주석처리 ㄱ*/
-            border: 1px solid lightgrey;
         }
 
         .footer-title {
@@ -179,7 +178,7 @@
                                         <p>${mnt_desc}</p>`
                             let temp_head_html = `<h1>${mnt_name}</h1>`
                             $("#img-mtn").attr("src", mnt_img)
-                                ${'.mytitle'}.append(temp_head_html)
+                                $('.mytitle').append(temp_head_html)
                             $('#detail').append(temp_html)
                         }
                     } 
