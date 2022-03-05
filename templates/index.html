@@ -69,6 +69,19 @@
             color: darkgrey;
         }
 
+        a#topBtn {
+            position: fixed; /* 포지션 고정 */
+            right: 2.5%; /* - %도 할수 있음*/
+            bottom: 10px; /* 밑에서 5px */
+            display: none; /* 보여지지 없음 - 기본적으로 안보여지게 */
+            z-index: 9999; /* 포지션을 먼저 지정후 z-좌표(레이어) : 9999입니다. */
+
+            font-weight: bold;
+            background-color: darkgreen;
+            color: white;
+            text-decoration: none;
+        }
+
     </style>
 
     <script>
@@ -92,7 +105,7 @@
 
                         let temp_html = `<div class="col">
                                                 <div class="card h-100">
-                                                    <a href="/index_sub?mnt_no=${mnt_no}"><img id= "img-mtn" src="${mnt_img}" style="width: auto;height: 230px; display: block; margin: 0px auto;"
+                                                    <a href="/index_sub?mnt_no=${mnt_no}"><img id= "img-mtn" src="${mnt_img}" style="max-width: 100%;max-height: 150px; height: auto; display: block; margin: 0px auto; alt="${mnt_name}""
                                                                                               class="card-img-top"></a>
                                                     <div class="card-body">
                                                         <h5 class="mtname">${mnt_name}</h5>
@@ -131,7 +144,7 @@
                         let mnt_img = rows[i]['mnt_img']
                         let mnt_no = rows[i]['mnt_no']
 
-    // 사진을 누르면 mnt_no도 같이 전달될 수 있게 url 매개변수에 값을 할당                    
+                        // 사진을 누르면 mnt_no도 같이 전달될 수 있게 url 매개변수에 값을 할당
                         let temp_html = `<div class="col">
                                                 <div class="card h-100">
                                                     <a href="/index_sub?mnt_no=${mnt_no}"><img id= "img-mtn" src="${mnt_img}" style="width: auto;height: 220px; display: block; margin: 0px auto;"class="card-img-top"></a>
@@ -151,6 +164,22 @@
                 }
             })
         }
+
+        $(function () { // 보이기 | 숨기기
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 250) { //250 넘으면 버튼이 보여집니다.
+                    $('#topBtn').fadeIn();
+                } else {
+                    $('#topBtn').fadeOut();
+                }
+            }); // 버튼 클릭시
+            $("#topBtn").click(function () {
+                $('html, body').animate({
+                    scrollTop: 0 // 0 까지 animation 이동합니다.
+                }, 400); // 속도 400
+                return false;
+            });
+        });
     </script>
 
 </head>
@@ -187,7 +216,7 @@
     </div>
 </div>
 <div class="mycards">
-    <div class="row row-cols-1 row-cols-md-5 g-4" id="cards-box">
+    <div class="row row-cols-3 row-cols-md-5 g-4" id="cards-box">
 
     </div>
 </div>
@@ -202,6 +231,7 @@
         <div class="footer-detail">
             Designed by 항해99 사전스터디 24조
         </div>
+        <a id="topBtn" href="#">[TOP]</a>
     </div>
 </footer>
 </body>
