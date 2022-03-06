@@ -14,8 +14,135 @@
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cc63cbb83555d894219f7525f0a6a06d&libraries=services"></script> <!--각자의 카카오맵 자바스크립트 앱키를 넣어주셔야 합니다.-->
 
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="static/style.css">
+    <!--<link rel="stylesheet" href="static/style.css">-->
     <title>6기 24조 toy-project(subpage)</title>
+	<style>
+        * {
+            font-family: 'Gowun Dodum', sans-serif;
+        }
+
+        .mytitle {
+            position: fixed;
+            z-index: 1;
+            top: 0;
+
+            width: 100%;
+            height: 200px;
+
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://i.imgur.com/wVQ10Wi.jpg');
+            background-position: center;
+            background-size: cover;
+
+            color: white;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /*body*/
+        #wrapper {
+            padding-top: 200px;
+            height: auto;
+            min-height: 100%;
+            padding-bottom: 150px;
+        }
+
+        /*content*/
+        .content {
+            max-width: 750px;
+            width: 95%;
+            margin: auto;
+        }
+
+        img {
+            display: block;
+            margin: 10px auto 10px auto;
+            max-width: 600px;
+            width: 95%;
+            border-radius: 5px;
+        }
+
+        .aeatreason {
+            font-weight: bold;
+        }
+
+        .address {
+            text-align: center;
+        }
+
+        .map {
+            max-width: 600px;
+            width: 95%;
+            height: 400px;
+            margin: auto;
+            text-align: center;
+        }
+
+        /*mycomment*/
+        .mycomment {
+            max-width: 700px;
+            width: 95%;
+            margin: auto;
+        }
+
+        .myusername {
+            margin: 10px auto 10px auto;
+        }
+
+        textarea {
+            max-width: 700px;
+            width: 95%;
+            border: 1px solid lightgrey;
+        }
+
+        .mystar {
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+
+        .submit {
+            max-width: 700px;
+            width: 95%;
+            margin: auto;
+        }
+
+        .submit > button {
+            float: right;
+        }
+
+        .allcomments {
+            max-width: 700px;
+            width: 95%;
+            margin: auto;
+        }
+
+        /*comment*/
+        .username {
+            color: grey;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        /*footer*/
+        footer {
+            height: 150px;
+            position: relative;
+            padding: 10px 0px 0px 50px;
+            /* transform : translateY(-100%); */ /*구글에서 footer bottom으로 박을 때 이걸 쓰랬는데 안쓰니까 bottom에 박히는데? 일단 주석처리 ㄱ*/
+            border: 1px solid lightgrey;
+        }
+
+        .footer-title {
+            font-size: 2em;
+            color: grey;
+        }
+
+        .footer-detail {
+            color: darkgrey;
+        }
+    </style>
     <script>
         $(document).ready(function () {
             init_page() // 받은 산의 정보를 바탕으로 페이지의 정보를 초기화합니다.
@@ -91,6 +218,7 @@
                 }
             })
         }
+
     </script>
 
 </head>
@@ -118,7 +246,7 @@
         <div class="mycomment">
             <div><h5>Comment</h5></div>
             <div class="myusername">
-                <label for="user-name">닉네임</label> 
+                <label for="user-name">닉네임</label>
                 <input name="input_value" type="text" class="user-name" id="user-name" placeholder="닉네임">
             </div>
             <div class="mytextarea-comment">
@@ -177,7 +305,7 @@
 
 		let searchWord = address
 
-		var infowindow = new kakao.maps.InfoWindow({zIndex:0})
+		var infowindow = new kakao.maps.InfoWindow({zIndex:-1})
 
 		var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 				mapOption = {
